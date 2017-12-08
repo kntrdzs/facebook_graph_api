@@ -2,8 +2,9 @@
 
 facebook_api <- function(token, keyword, type, limit) {
   
+  data3<-NULL
   
- # for (i in seq_len(length(keyword))) {
+  for (i in seq_len(length(keyword))) {
     
     
   ## read URL
@@ -13,7 +14,7 @@ facebook_api <- function(token, keyword, type, limit) {
         "https://graph.facebook.com/v2.10/search?access_token=",
         token,
         "&pretty=1&fields=name%2Csingle_line_address%2Cphone%2Clocation%2Cfan_count&q=",
-        keyword,
+        keyword[i],
         "&type=",
         type,
         "&limit=",
@@ -24,7 +25,7 @@ facebook_api <- function(token, keyword, type, limit) {
   # transform to data.table
   data<-cbind(data.table(adat$data$location),adat$data[,-which(names(adat$data)=="location")])
   
-  data$category<-keyword
+  data$category<-keyword[i]
   #define paging URL
   url <- adat$paging$`next`
   
@@ -34,17 +35,20 @@ facebook_api <- function(token, keyword, type, limit) {
           adat <- fromJSON(url)
           data2<-cbind(data.table(adat$data$location),adat$data[,-which(names(adat$data)=="location")])
           
-          data2$category<-keyword
+          data2$category<-keyword[i]
           
           url <- adat$paging$`next`
           
           #binding data tables
           data <- rbindlist(list(data, data2), fill = T)
           
-        }
-  #}
+          }
   
-  return(data)
+  data3<-rbindlist(list(data3,data),fill = T)
+  
+  }
+  
+  return(data3)
   
 }
 
