@@ -23,9 +23,15 @@ facebook_api <- function(token, keyword, type, limit) {
       )
     )
   # transform to data.table
-  data<-cbind(data.table(adat$data$location),adat$data[,-which(names(adat$data)=="location")])
+  data<-cbind(
+              data.table(adat$data$location),
+              adat$data[,-which(names(adat$data)=="location")]
+              )
   
+  data$run_time<-Sys.time()
+  data$type<-type
   data$category<-keyword[i]
+  
   #define paging URL
   url <- adat$paging$`next`
   
@@ -33,8 +39,13 @@ facebook_api <- function(token, keyword, type, limit) {
   while (!is.null(url)){
     
           adat <- fromJSON(url)
-          data2<-cbind(data.table(adat$data$location),adat$data[,-which(names(adat$data)=="location")])
+          data2<-cbind(
+                       data.table(adat$data$location),
+                       adat$data[,-which(names(adat$data)=="location")]
+          )
           
+          data2$run_time<-Sys.time()
+          data2$type<-type
           data2$category<-keyword[i]
           
           url <- adat$paging$`next`
