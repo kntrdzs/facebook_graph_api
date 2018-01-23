@@ -1,6 +1,6 @@
 #### FACEBOOK GRAPH API ####
 
-facebook_api <- function(token, keyword, type, limit) {
+facebook_api <- function(token, keyword, type, limit,center,distance) {
   
   data3<-NULL
   
@@ -11,14 +11,12 @@ facebook_api <- function(token, keyword, type, limit) {
   adat <-
     fromJSON(
       paste0(
-        "https://graph.facebook.com/v2.10/search?access_token=",
-        token,
-        "&pretty=1&fields=name%2Csingle_line_address%2Cphone%2Clocation%2Cfan_count&q=",
-        keyword[i],
-        "&type=",
-        type,
-        "&limit=",
-        limit,
+        "https://graph.facebook.com/v2.10/search?access_token=",token,
+        "&pretty=1&fields=name%2Csingle_line_address%2Cphone%2Clocation%2Cfan_count&q=",keyword[i],
+        "&center=",center,
+        "&distance=",distance,
+        "&type=",type,
+        "&limit=",limit,
         "&after=MjYZD"
       )
     )
@@ -42,7 +40,7 @@ facebook_api <- function(token, keyword, type, limit) {
           data2<-cbind(
                        data.table(adat$data$location),
                        adat$data[,-which(names(adat$data)=="location")]
-          )
+                      )
           
           data2$run_time<-Sys.time()
           data2$type<-type
@@ -62,4 +60,5 @@ facebook_api <- function(token, keyword, type, limit) {
   return(data3)
   
 }
+
 
