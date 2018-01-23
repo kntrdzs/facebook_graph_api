@@ -8,7 +8,7 @@ facebook_api <- function(token, keyword, type, limit,center,distance) {
     
     
   ## read URL
-  adat <-
+  adat <-try(
     fromJSON(
       paste0(
         "https://graph.facebook.com/v2.10/search?access_token=",token,
@@ -19,7 +19,10 @@ facebook_api <- function(token, keyword, type, limit,center,distance) {
         "&limit=",limit,
         "&after=MjYZD"
       )
-    )
+    ),
+    silent=T)
+  
+  if (is(adat,"try-error")) next
   # transform to data.table
   data<-cbind(
               data.table(adat$data$location),
