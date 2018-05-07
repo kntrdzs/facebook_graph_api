@@ -84,7 +84,7 @@ facebook_api <- function(token, keyword, type, limit,center,distance) {
   }
   
   return(data3) 
-  
+   
 }
 
 
