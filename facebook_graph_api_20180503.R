@@ -16,7 +16,7 @@ facebook_api <- function(token, keyword, type, limit,center,distance) {
             fromJSON(
                       paste0(
                         "https://graph.facebook.com/v2.11/search?access_token=",token,
-                        "&pretty=1&fields=name,single_line_address,phone,location,fan_count,overall_star_rating,price_range&q=",keyword[1],
+                        "&pretty=1&fields=name,single_line_address,phone,location,fan_count,overall_star_rating,price_range&q=",keyword[i],
                         "&center=",center,
                         "&distance=",distance,
                         "&type=",type,
@@ -33,9 +33,9 @@ facebook_api <- function(token, keyword, type, limit,center,distance) {
   adat_2<-adat$data
   
   # list to data.frame
-  for (i in 1:length(adat_2))  {
+  for (l in 1:length(adat_2))  {
     
-    one_line<-data.frame(adat_2[[i]])
+    one_line<-data.frame(adat_2[[l]])
     data<-rbindlist(list(data,one_line), fill=T)
     
     
@@ -45,7 +45,7 @@ facebook_api <- function(token, keyword, type, limit,center,distance) {
   # additional information
   data$run_time<-Sys.time()
   data$type<-type
-  data$category<-keyword[i]
+  #data$category<-keyword[i]
   
   #define paging URL
   url <- adat$paging$`next`
@@ -70,7 +70,7 @@ facebook_api <- function(token, keyword, type, limit,center,distance) {
           
           data2$run_time<-Sys.time()
           data2$type<-type
-          data2$category<-keyword[i]
+          #data2$category<-keyword[i]
           
           url <- adat2$paging$`next`
           
@@ -80,6 +80,8 @@ facebook_api <- function(token, keyword, type, limit,center,distance) {
           }
   
   data3<-rbindlist(list(data3,data),fill = T)
+  
+  data3$category<-keyword[i]
   
   }
   
