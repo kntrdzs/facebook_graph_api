@@ -1,18 +1,34 @@
 #### FACEBOOK GRAPH API ####
 # Last modified : 2018.05.07
 
-
-facebook_api <- function(token, keyword, type, limit,center,distance) {
+facebook_api <- function(token, keyword, type, limit,city) {
   
   # declare the empty objects
   data<-NULL
   data2<-NULL
   data3<-NULL
+  data4<-NULL
   
   
-  for (i in 1: length(city)){
+  for (c in 1: nrow(city)){
     
-  center<-paste0(city$telepules_lat[i],",",city$telepules_lon[i])  
+  center<-paste0(city$telepules_lat[c],",",city$telepules_lon[c])  
+  
+  if (city$population[c] < 5000) {
+    distance = 5000
+  }
+  else if (city$population[c] < 10000) {
+    distance = 7000
+  }
+  else if (city$population[c] < 20000) {
+    distance = 10000
+  }
+  else if (city$population[c] < 100000) {
+    distance = 15000
+  }
+  else {
+    distance = 20000
+  }
     
   # cycle that iterates by keywords
   for (i in keyword) {       
@@ -79,13 +95,14 @@ facebook_api <- function(token, keyword, type, limit,center,distance) {
   
   
   }
-  
+  data4<-rbindlist(list(data4,data3),fill = T)
+  data4<-distinct(data4)
   
   
   
   }
   
-  return(data3) 
+  return(data4) 
    
 }
 
